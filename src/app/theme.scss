@@ -1,0 +1,181 @@
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+$background: #ebeff2;
+$paper: #ffffff;
+
+$primary-palette: (
+  50: #f2e5f2,
+  100: #dfbfdf,
+  200: #c995c9,
+  300: #b36ab3,
+  400: #a24ba2,
+  500: #912b91,
+  600: #892689,
+  700: #7e207e,
+  800: #741a74,
+  900: #621062,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+$secondary-palette: (
+  50: #e8ecee,
+  100: #c5cfd5,
+  200: #9fb0b9,
+  300: #79909d,
+  400: #5c7788,
+  500: #425f6b,
+  600: #3c5762,
+  700: #334d57,
+  800: #2b434d,
+  900: #1d323b,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+  ),
+);
+
+$primary: mat.define-palette($primary-palette, 500);
+$accent: mat.define-palette($secondary-palette, 500);
+$warn: mat.define-palette(mat.$red-palette);
+
+$theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $primary,
+      accent: $accent,
+      warn: $warn,
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  )
+);
+
+@include mat.all-component-themes($theme);
+
+// Custom styles for the application
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: $background;
+}
+
+.mat-mdc-button.mat-primary {
+  --mdc-filled-button-container-color: #{mat.get-color-from-palette(
+      $primary-palette,
+      500
+    )};
+  --mdc-filled-button-label-text-color: white;
+}
+
+.mat-mdc-button.mat-accent {
+  --mdc-filled-button-container-color: #{mat.get-color-from-palette(
+      $secondary-palette,
+      500
+    )};
+  --mdc-filled-button-label-text-color: white;
+}
+
+.mat-mdc-card {
+  --mdc-elevated-card-container-color: $paper;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mat-mdc-toolbar {
+  --mdc-elevated-card-container-color: #{mat.get-color-from-palette(
+      $primary-palette,
+      500
+    )};
+  color: white;
+}
+
+.mat-mdc-snack-bar-container {
+  &.success-snackbar {
+    --mdc-snackbar-container-color: #{mat.get-color-from-palette(
+        $primary-palette,
+        500
+      )};
+    --mat-mdc-snack-bar-button-color: white;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+
+  &.error-snackbar {
+    --mdc-snackbar-container-color: #{mat.get-color-from-palette(
+        mat.$red-palette,
+        500
+      )};
+    --mat-mdc-snack-bar-button-color: white;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+}
+
+// Layout specific styles
+.layout-container {
+  background-color: $background;
+  min-height: 100vh;
+}
+
+.content-container {
+  background-color: $paper;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin: 24px;
+}
+
+.mat-mdc-sidenav {
+  background-color: $paper !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.mat-mdc-sidenav-content {
+  background-color: $background;
+}
+
+// Table styles
+.mat-mdc-table {
+  background-color: $paper;
+}
+
+.mat-mdc-header-cell {
+  background-color: $background;
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 500;
+}
+
+// Form field styles
+.mat-mdc-form-field {
+  background-color: $paper;
+  border-radius: 4px;
+}
+
+// Dialog styles
+.mat-mdc-dialog-container {
+  --mdc-dialog-container-color: #{$paper};
+}
+
+// Menu styles
+.mat-mdc-menu-panel {
+  background-color: $paper !important;
+}
