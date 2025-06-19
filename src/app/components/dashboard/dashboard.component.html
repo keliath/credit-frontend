@@ -1,166 +1,41 @@
-<mat-sidenav-container class="sidenav-container">
-  <!-- Sidenav -->
-  <mat-sidenav
-    #drawer
-    class="sidenav"
-    fixedInViewport
-    [attr.role]="'navigation'"
-    [mode]="'side'"
-    [opened]="sidenavOpened"
-  >
-    <div class="sidenav-header">
-      <h2>Sistema de Créditos</h2>
-      <p class="user-role" *ngIf="user$ | async as user">
-        {{ user.role }}
-      </p>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <mat-nav-list>
-      <!-- Common Menu Items -->
-      <a
-        mat-list-item
-        routerLink="/dashboard"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        <mat-icon matListItemIcon>dashboard</mat-icon>
-        <span matListItemTitle>Inicio</span>
-      </a>
-
-      <a
-        mat-list-item
-        routerLink="/dashboard/profile"
-        routerLinkActive="active"
-      >
-        <mat-icon matListItemIcon>person</mat-icon>
-        <span matListItemTitle>Mi Perfil</span>
-      </a>
-
-      <mat-divider></mat-divider>
-
-      <!-- User Menu -->
-      <ng-container *ngIf="isApplicant$ | async">
-        <div class="menu-section">
-          <span class="menu-section-title">Solicitante</span>
-          <a
-            mat-list-item
-            routerLink="/dashboard/new-request"
-            routerLinkActive="active"
-          >
-            <mat-icon matListItemIcon>add_circle</mat-icon>
-            <span matListItemTitle>Nueva Solicitud</span>
-          </a>
-          <a
-            mat-list-item
-            routerLink="/dashboard/my-requests"
-            routerLinkActive="active"
-          >
-            <mat-icon matListItemIcon>list</mat-icon>
-            <span matListItemTitle>Mis Solicitudes</span>
-          </a>
+<div class="dashboard-home">
+  <mat-card class="welcome-card">
+    <mat-card-header>
+      <mat-card-title>Bienvenido al Sistema de Créditos</mat-card-title>
+      <mat-card-subtitle *ngIf="user$ | async as user">
+        {{ user.username }} - {{ user.role }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="content-section">
+        <h2>¿Qué desea hacer?</h2>
+        <div class="actions-grid">
+          <ng-container *ngIf="isApplicant$ | async">
+            <mat-card class="action-card" routerLink="/new-request">
+              <mat-icon>add_circle</mat-icon>
+              <h3>Nueva Solicitud</h3>
+              <p>Crear una nueva solicitud de crédito</p>
+            </mat-card>
+            <mat-card class="action-card" routerLink="/my-requests">
+              <mat-icon>list</mat-icon>
+              <h3>Mis Solicitudes</h3>
+              <p>Ver el estado de mis solicitudes</p>
+            </mat-card>
+          </ng-container>
+          <ng-container *ngIf="isAnalyst$ | async">
+            <mat-card class="action-card" routerLink="/requests">
+              <mat-icon>assessment</mat-icon>
+              <h3>Todas las Solicitudes</h3>
+              <p>Ver todas las solicitudes de crédito</p>
+            </mat-card>
+          </ng-container>
+          <mat-card class="action-card" routerLink="/profile">
+            <mat-icon>person</mat-icon>
+            <h3>Mi Perfil</h3>
+            <p>Ver y editar mi información personal</p>
+          </mat-card>
         </div>
-      </ng-container>
-
-      <!-- Analyst Menu -->
-      <ng-container *ngIf="isAnalyst$ | async">
-        <div class="menu-section">
-          <span class="menu-section-title">Analista</span>
-          <a
-            mat-list-item
-            routerLink="/dashboard/requests"
-            routerLinkActive="active"
-          >
-            <mat-icon matListItemIcon>assessment</mat-icon>
-            <span matListItemTitle>Todas las Solicitudes</span>
-          </a>
-          <a
-            mat-list-item
-            routerLink="/dashboard/pending"
-            routerLinkActive="active"
-          >
-            <mat-icon matListItemIcon>pending</mat-icon>
-            <span matListItemTitle>Pendientes</span>
-          </a>
-          <a
-            mat-list-item
-            routerLink="/dashboard/approved"
-            routerLinkActive="active"
-          >
-            <mat-icon matListItemIcon>check_circle</mat-icon>
-            <span matListItemTitle>Aprobadas</span>
-          </a>
-          <a
-            mat-list-item
-            routerLink="/dashboard/rejected"
-            routerLinkActive="active"
-          >
-            <mat-icon matListItemIcon>cancel</mat-icon>
-            <span matListItemTitle>Rechazadas</span>
-          </a>
-        </div>
-      </ng-container>
-
-      <mat-divider></mat-divider>
-
-      <!-- Logout -->
-      <a mat-list-item (click)="onLogout()">
-        <mat-icon matListItemIcon>exit_to_app</mat-icon>
-        <span matListItemTitle>Cerrar Sesión</span>
-      </a>
-    </mat-nav-list>
-  </mat-sidenav>
-
-  <!-- Main Content -->
-  <mat-sidenav-content class="sidenav-content">
-    <!-- Toolbar -->
-    <mat-toolbar color="primary" class="toolbar">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()"
-        class="sidenav-toggle"
-      >
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-      </button>
-
-      <span class="toolbar-title">
-        {{ getGreeting() }}, {{ (user$ | async)?.username }}
-      </span>
-
-      <span class="toolbar-spacer"></span>
-
-      <button
-        mat-icon-button
-        [matMenuTriggerFor]="userMenu"
-        class="user-menu-button"
-      >
-        <mat-icon>account_circle</mat-icon>
-      </button>
-
-      <mat-menu #userMenu="matMenu">
-        <div class="user-menu-header" *ngIf="user$ | async as user">
-          <p class="user-name">{{ user.username }}</p>
-          <p class="user-email">{{ user.email }}</p>
-          <p class="user-role">{{ user.role }}</p>
-        </div>
-        <mat-divider></mat-divider>
-        <button mat-menu-item routerLink="/dashboard/profile">
-          <mat-icon>person</mat-icon>
-          <span>Mi Perfil</span>
-        </button>
-        <button mat-menu-item (click)="onLogout()">
-          <mat-icon>exit_to_app</mat-icon>
-          <span>Cerrar Sesión</span>
-        </button>
-      </mat-menu>
-    </mat-toolbar>
-
-    <!-- Page Content -->
-    <div class="content-container">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

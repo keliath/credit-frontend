@@ -27,36 +27,25 @@ import * as AuthSelectors from '../../store/selectors/auth.selectors';
             <h2>¿Qué desea hacer?</h2>
             <div class="actions-grid">
               <ng-container *ngIf="isApplicant$ | async">
-                <mat-card
-                  class="action-card"
-                  routerLink="/dashboard/new-request"
-                >
+                <mat-card class="action-card" routerLink="/new-request">
                   <mat-icon>add_circle</mat-icon>
                   <h3>Nueva Solicitud</h3>
                   <p>Crear una nueva solicitud de crédito</p>
                 </mat-card>
-                <mat-card
-                  class="action-card"
-                  routerLink="/dashboard/my-requests"
-                >
+                <mat-card class="action-card" routerLink="/my-requests">
                   <mat-icon>list</mat-icon>
                   <h3>Mis Solicitudes</h3>
                   <p>Ver el estado de mis solicitudes</p>
                 </mat-card>
               </ng-container>
               <ng-container *ngIf="isAnalyst$ | async">
-                <mat-card class="action-card" routerLink="/dashboard/requests">
+                <mat-card class="action-card" routerLink="/requests">
                   <mat-icon>assessment</mat-icon>
                   <h3>Todas las Solicitudes</h3>
                   <p>Ver todas las solicitudes de crédito</p>
                 </mat-card>
-                <mat-card class="action-card" routerLink="/dashboard/pending">
-                  <mat-icon>pending</mat-icon>
-                  <h3>Solicitudes Pendientes</h3>
-                  <p>Revisar solicitudes pendientes</p>
-                </mat-card>
               </ng-container>
-              <mat-card class="action-card" routerLink="/dashboard/profile">
+              <mat-card class="action-card" routerLink="/profile">
                 <mat-icon>person</mat-icon>
                 <h3>Mi Perfil</h3>
                 <p>Ver y editar mi información personal</p>

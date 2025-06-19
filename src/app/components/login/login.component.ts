@@ -19,6 +19,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { RegisterRequest } from '../../models/user.model';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 import { AppState } from '../../store';
 import * as AuthActions from '../../store/actions/auth.actions';
 import * as AuthSelectors from '../../store/selectors/auth.selectors';
@@ -53,7 +54,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private store: Store<AppState>,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private errorHandler: ErrorHandlerService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -71,7 +73,10 @@ export class LoginComponent implements OnInit {
 
     this.error$.subscribe((error) => {
       if (error) {
-        this.snackBar.open(error, 'Cerrar', { duration: 5000 });
+        this.errorHandler.handleApiError(
+          error,
+          'Ocurrió un error al iniciar sesión.'
+        );
       }
     });
   }
@@ -91,7 +96,10 @@ export class LoginComponent implements OnInit {
     // Listen for errors
     this.error$.subscribe((error) => {
       if (error) {
-        this.snackBar.open(error, 'Cerrar', { duration: 5000 });
+        this.errorHandler.handleApiError(
+          error,
+          'Ocurrió un error al iniciar sesión.'
+        );
       }
     });
   }

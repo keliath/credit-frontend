@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { User } from '../../models/user.model';
@@ -20,7 +21,6 @@ import * as AuthSelectors from '../../store/selectors/auth.selectors';
   standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet,
     RouterModule,
     MatToolbarModule,
     MatButtonModule,
@@ -29,6 +29,7 @@ import * as AuthSelectors from '../../store/selectors/auth.selectors';
     MatSidenavModule,
     MatListModule,
     MatDividerModule,
+    MatCardModule,
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
@@ -46,9 +47,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Check if user is authenticated
     this.user$.subscribe((user) => {
-      console.log('Dashboard user state:', user);
       if (!user) {
         this.router.navigate(['/login']);
       }
