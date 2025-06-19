@@ -1,0 +1,49 @@
+<div class="profile-container">
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <mat-card-title>Mi Perfil</mat-card-title>
+      <mat-card-subtitle>Información de la cuenta</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="profile-content" *ngIf="user$ | async as user">
+        <div class="profile-avatar">
+          <mat-icon class="avatar-icon">account_circle</mat-icon>
+        </div>
+
+        <div class="profile-info">
+          <div class="info-row">
+            <label>Nombre:</label>
+            <span>{{ user.username }}</span>
+          </div>
+
+          <div class="info-row">
+            <label>Email:</label>
+            <span>{{ user.email }}</span>
+          </div>
+
+          <div class="info-row">
+            <label>Rol:</label>
+            <span class="role-badge">{{ translateRole(user.role) }}</span>
+          </div>
+
+          <!-- <div class="info-row">
+            <label>Fecha de registro:</label>
+            <span>{{ formatDate(user.createdAt) }}</span>
+          </div> -->
+        </div>
+
+        <!-- <div class="profile-actions">
+          <button mat-raised-button color="primary">
+            <mat-icon>edit</mat-icon>
+            Editar Perfil
+          </button>
+          <button mat-stroked-button>
+            <mat-icon>security</mat-icon>
+            Cambiar Contraseña
+          </button>
+        </div> -->
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,41 @@
+<div class="dashboard-home">
+  <mat-card class="welcome-card">
+    <mat-card-header>
+      <mat-card-title>Bienvenido al Sistema de Créditos</mat-card-title>
+      <mat-card-subtitle *ngIf="user$ | async as user">
+        {{ user.username }} - {{ user.role }}
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="content-section">
+        <h2>¿Qué desea hacer?</h2>
+        <div class="actions-grid">
+          <ng-container *ngIf="isApplicant$ | async">
+            <mat-card class="action-card" routerLink="/new-request">
+              <mat-icon>add_circle</mat-icon>
+              <h3>Nueva Solicitud</h3>
+              <p>Crear una nueva solicitud de crédito</p>
+            </mat-card>
+            <mat-card class="action-card" routerLink="/my-requests">
+              <mat-icon>list</mat-icon>
+              <h3>Mis Solicitudes</h3>
+              <p>Ver el estado de mis solicitudes</p>
+            </mat-card>
+          </ng-container>
+          <ng-container *ngIf="isAnalyst$ | async">
+            <mat-card class="action-card" routerLink="/requests">
+              <mat-icon>assessment</mat-icon>
+              <h3>Todas las Solicitudes</h3>
+              <p>Ver todas las solicitudes de crédito</p>
+            </mat-card>
+          </ng-container>
+          <mat-card class="action-card" routerLink="/profile">
+            <mat-icon>person</mat-icon>
+            <h3>Mi Perfil</h3>
+            <p>Ver y editar mi información personal</p>
+          </mat-card>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

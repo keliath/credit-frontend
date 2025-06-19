@@ -1,0 +1,168 @@
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card mat-card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  margin: -16px -16px 24px -16px;
+  padding: 24px 16px;
+  border-radius: 12px 12px 0 0;
+
+  mat-card-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  mat-card-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+  }
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.profile-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+
+  .avatar-icon {
+    font-size: 60px;
+    width: 60px;
+    height: 60px;
+  }
+}
+
+.profile-info {
+  width: 100%;
+  max-width: 400px;
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    label {
+      font-weight: 600;
+      color: #333;
+      min-width: 120px;
+    }
+
+    span {
+      color: #666;
+      text-align: right;
+    }
+
+    .role-badge {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+.profile-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+
+    mat-icon {
+      font-size: 18px;
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 0 16px;
+  }
+
+  .profile-card mat-card-header {
+    mat-card-title {
+      font-size: 20px;
+    }
+
+    mat-card-subtitle {
+      font-size: 14px;
+    }
+  }
+
+  .profile-info .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+
+    label {
+      min-width: auto;
+    }
+
+    span {
+      text-align: left;
+    }
+  }
+
+  .profile-actions {
+    flex-direction: column;
+    width: 100%;
+
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 0 8px;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+
+    .avatar-icon {
+      font-size: 50px;
+      width: 50px;
+      height: 50px;
+    }
+  }
+}

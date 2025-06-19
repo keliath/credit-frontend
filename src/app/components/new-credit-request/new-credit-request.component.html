@@ -1,0 +1,131 @@
+<div class="new-request-container">
+  <mat-card class="request-card">
+    <mat-card-header>
+      <mat-card-title>Nueva Solicitud de Crédito</mat-card-title>
+      <mat-card-subtitle
+        >Complete el formulario para solicitar un crédito</mat-card-subtitle
+      >
+    </mat-card-header>
+
+    <mat-card-content>
+      <form
+        [formGroup]="creditRequestForm"
+        (ngSubmit)="onSubmit()"
+        class="request-form"
+      >
+        <!-- Amount Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Monto Solicitado ($)</mat-label>
+          <input
+            matInput
+            formControlName="amount"
+            type="number"
+            placeholder="Ej: 50000"
+            min="100"
+            max="1000000"
+          />
+          <mat-hint>Monto entre $100 y $1,000,000</mat-hint>
+          <mat-error *ngIf="creditRequestForm.get('amount')?.invalid">
+            {{ getErrorMessage("amount") }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Term Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Plazo en Meses</mat-label>
+          <input
+            matInput
+            formControlName="termInMonths"
+            type="number"
+            placeholder="Ej: 24"
+            min="3"
+            max="120"
+          />
+          <mat-hint>Plazo entre 6 y 120 meses</mat-hint>
+          <mat-error *ngIf="creditRequestForm.get('termInMonths')?.invalid">
+            {{ getErrorMessage("termInMonths") }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Monthly Income Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Ingreso Mensual ($)</mat-label>
+          <input
+            matInput
+            formControlName="monthlyIncome"
+            type="number"
+            placeholder="Ej: 3000"
+            min="400"
+          />
+          <mat-hint>Ingreso mensual mínimo $400</mat-hint>
+          <mat-error *ngIf="creditRequestForm.get('monthlyIncome')?.invalid">
+            {{ getErrorMessage("monthlyIncome") }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Work Experience Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Antigüedad Laboral (años)</mat-label>
+          <input
+            matInput
+            formControlName="workExperience"
+            type="number"
+            placeholder="Ej: 5"
+            min="0"
+            max="50"
+          />
+          <mat-hint>Años de experiencia laboral</mat-hint>
+          <mat-error *ngIf="creditRequestForm.get('workExperience')?.invalid">
+            {{ getErrorMessage("workExperience") }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Purpose Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Propósito del Crédito</mat-label>
+          <input
+            matInput
+            formControlName="purpose"
+            type="text"
+            placeholder="Ej: Compra de vehículo, remodelación, etc."
+            minlength="10"
+          />
+          <mat-hint
+            >Describa el propósito del crédito (mínimo 10 caracteres)</mat-hint
+          >
+          <mat-error *ngIf="creditRequestForm.get('purpose')?.invalid">
+            {{ getErrorMessage("purpose") }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="submit-button"
+            [disabled]="creditRequestForm.invalid || (loading$ | async)"
+          >
+            <mat-spinner diameter="20" *ngIf="loading$ | async"></mat-spinner>
+            <span *ngIf="!(loading$ | async)">Enviar Solicitud</span>
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Information Card -->
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-card-title>Información Importante</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li>Su solicitud será revisada por un analista del banco</li>
+        <li>El proceso de evaluación puede tomar de 1 a 3 días hábiles</li>
+        <li>Puede consultar el estado de su solicitud en "Mis Solicitudes"</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

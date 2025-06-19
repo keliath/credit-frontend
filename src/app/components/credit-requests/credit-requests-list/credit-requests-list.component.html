@@ -1,0 +1,76 @@
+<div class="credit-requests-container">
+  <div class="header">
+    <h2>Credit Requests</h2>
+    <div class="actions">
+      <div class="status-filter">
+        <label for="status">Filter by Status:</label>
+        <select
+          id="status"
+          [(ngModel)]="selectedStatus"
+          (change)="onStatusChange(selectedStatus)"
+        >
+          <option [ngValue]="undefined">All</option>
+          <option [value]="'Pending'">Pending</option>
+          <option [value]="'Approved'">Approved</option>
+          <option [value]="'Rejected'">Rejected</option>
+        </select>
+      </div>
+      <div class="export-buttons">
+        <button class="btn btn-secondary" (click)="exportToPdf()">
+          <i class="fas fa-file-pdf"></i> Export to PDF
+        </button>
+        <button class="btn btn-secondary" (click)="exportToExcel()">
+          <i class="fas fa-file-excel"></i> Export to Excel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="loading$ | async">
+    <div class="spinner"></div>
+    <p>Loading credit requests...</p>
+  </div>
+
+  <div class="error" *ngIf="error$ | async as error">
+    <p class="error-message">
+      {{ error.message || "An error occurred while loading credit requests." }}
+    </p>
+  </div>
+
+  <div class="requests-list" *ngIf="!(loading$ | async) && !(error$ | async)">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Username</th>
+          <th>Amount</th>
+          <th>Purpose</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Updated At</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let request of requests$ | async">
+          <td>{{ request.id }}</td>
+          <td>{{ request.username }}</td>
+          <td>{{ request.amount | currency }}</td>
+          <td>{{ request.purpose }}</td>
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="getStatusClass(request.status)"
+            >
+              {{ request.status }}
+            </span>
+          </td>
+          <td>{{ request.createdAt | date : "medium" }}</td>
+          <td>{{ request.updatedAt | date : "medium" }}</td>
+        </tr>
+        <tr *ngIf="(requests$ | async)?.length === 0">
+          <td colspan="7" class="no-data">No credit requests found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

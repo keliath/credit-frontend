@@ -1,0 +1,138 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title class="title-container">
+        <mat-icon class="title-icon">account_balance</mat-icon>
+        Sistema de Créditos
+      </mat-card-title>
+      <mat-card-subtitle>Iniciar sesión o registrarse</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-tab-group [(selectedIndex)]="selectedTab" animationDuration="300ms">
+        <!-- Login Tab -->
+        <mat-tab label="Iniciar Sesión">
+          <div class="tab-content">
+            <form
+              [formGroup]="loginForm"
+              (ngSubmit)="onSubmit()"
+              class="form-container"
+            >
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email</mat-label>
+                <input
+                  matInput
+                  formControlName="email"
+                  type="email"
+                  placeholder="Enter your email"
+                />
+                <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+                  Email is required
+                </mat-error>
+                <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+                  Please enter a valid email address
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Contraseña</mat-label>
+                <input
+                  matInput
+                  formControlName="password"
+                  type="password"
+                  placeholder="Ingrese su contraseña"
+                />
+                <mat-icon matSuffix>lock</mat-icon>
+                <mat-error *ngIf="loginForm.get('password')?.invalid">
+                  {{ getErrorMessage(loginForm, "password") }}
+                </mat-error>
+              </mat-form-field>
+
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                class="full-width submit-button"
+                [disabled]="loginForm.invalid || (loading$ | async)"
+              >
+                <mat-spinner
+                  diameter="20"
+                  *ngIf="loading$ | async"
+                ></mat-spinner>
+                <mat-icon *ngIf="!(loading$ | async)">login</mat-icon>
+                <span *ngIf="!(loading$ | async)">Iniciar Sesión</span>
+              </button>
+            </form>
+          </div>
+        </mat-tab>
+
+        <!-- Register Tab -->
+        <mat-tab label="Registrarse">
+          <div class="tab-content">
+            <form
+              [formGroup]="registerForm"
+              (ngSubmit)="onRegister()"
+              class="form-container"
+            >
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nombre de Usuario</mat-label>
+                <input
+                  matInput
+                  formControlName="username"
+                  placeholder="Ingrese su nombre de usuario"
+                />
+                <mat-icon matSuffix>person</mat-icon>
+                <mat-error *ngIf="registerForm.get('username')?.invalid">
+                  {{ getErrorMessage(registerForm, "username") }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email</mat-label>
+                <input
+                  matInput
+                  formControlName="email"
+                  type="email"
+                  placeholder="ejemplo@email.com"
+                />
+                <mat-icon matSuffix>email</mat-icon>
+                <mat-error *ngIf="registerForm.get('email')?.invalid">
+                  {{ getErrorMessage(registerForm, "email") }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Contraseña</mat-label>
+                <input
+                  matInput
+                  formControlName="password"
+                  type="password"
+                  placeholder="Mínimo 6 caracteres"
+                />
+                <mat-icon matSuffix>lock</mat-icon>
+                <mat-error *ngIf="registerForm.get('password')?.invalid">
+                  {{ getErrorMessage(registerForm, "password") }}
+                </mat-error>
+              </mat-form-field>
+
+              <button
+                mat-raised-button
+                color="primary"
+                type="submit"
+                class="full-width submit-button"
+                [disabled]="registerForm.invalid || (loading$ | async)"
+              >
+                <mat-spinner
+                  diameter="20"
+                  *ngIf="loading$ | async"
+                ></mat-spinner>
+                <mat-icon *ngIf="!(loading$ | async)">person_add</mat-icon>
+                <span *ngIf="!(loading$ | async)">Registrarse</span>
+              </button>
+            </form>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+  </mat-card>
+</div>
