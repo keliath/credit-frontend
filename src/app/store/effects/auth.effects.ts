@@ -57,11 +57,7 @@ export class AuthEffects {
         ofType(AuthActions.loginSuccess),
         tap(({ user, token }) => {
           localStorage.setItem('token', token);
-          if (user.role === 'Analyst') {
-            this.router.navigate(['/credit-requests']);
-          } else {
-            this.router.navigate(['/my-credit-requests']);
-          }
+          this.router.navigate(['/dashboard']);
         })
       ),
     { dispatch: false }
@@ -72,14 +68,17 @@ export class AuthEffects {
       ofType(AuthActions.whoami),
       withLatestFrom(this.store.select(AuthSelectors.selectUser)),
       mergeMap(([_, currentUser]) => {
-        // If we already have a user, don't make the API call
         if (currentUser) {
-          return of(AuthActions.whoamiSuccess({ user: currentUser }));
+          const token = localStorage.getItem('token') || '';
+          return of(AuthActions.whoamiSuccess({ user: currentUser, token }));
         }
         return this.authService.whoami().pipe(
-          map((user) => AuthActions.whoamiSuccess({ user })),
+          map((response: any) => {
+            const { token, username, email, role } = response;
+            const user = { username, email, role };
+            return AuthActions.whoamiSuccess({ user, token });
+          }),
           catchError((error) => {
-            // If whoami fails, clear the token and user
             this.authService.logout();
             return of(AuthActions.whoamiFailure({ error: error.message }));
           })
@@ -156,11 +155,7 @@ export class AuthEffects {
       this.actions$.pipe(
         ofType(AuthActions.registerSuccess),
         tap(({ user }) => {
-          if (user.role === 'Analyst') {
-            this.router.navigate(['/credit-requests']);
-          } else {
-            this.router.navigate(['/my-credit-requests']);
-          }
+          this.router.navigate(['/dashboard']);
         })
       ),
     { dispatch: false }

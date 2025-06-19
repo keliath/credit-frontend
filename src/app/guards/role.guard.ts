@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable, map, take } from 'rxjs';
@@ -9,7 +10,11 @@ import * as AuthSelectors from '../store/selectors/auth.selectors';
   providedIn: 'root',
 })
 export class RoleGuard implements CanActivate {
-  constructor(private store: Store<AppState>, private router: Router) {}
+  constructor(
+    private store: Store<AppState>,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 
   canActivate(): Observable<boolean | UrlTree> {
     return this.store.select(AuthSelectors.selectUser).pipe(
@@ -24,16 +29,24 @@ export class RoleGuard implements CanActivate {
         );
         const requiredRoles = route?.data?.['roles'] as string[];
 
-        if (!requiredRoles || requiredRoles.includes(user.role)) {
+        if (
+          !requiredRoles ||
+          requiredRoles
+            .map((r) => r.toLowerCase())
+            .includes(user.role.toLowerCase())
+        ) {
           return true;
         }
 
-        // Redirect to appropriate default route based on role
-        if (user.role === 'Analyst') {
-          return this.router.createUrlTree(['/credit-requests']);
-        } else {
-          return this.router.createUrlTree(['/my-credit-requests']);
-        }
+        this.snackBar.open(
+          'Acceso denegado: no tienes permisos para acceder a esta página.',
+          'Cerrar',
+          {
+            duration: 3500,
+            panelClass: 'error-snackbar',
+          }
+        );
+        return this.router.createUrlTree(['/dashboard']);
       })
     );
   }

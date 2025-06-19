@@ -1,12 +1,13 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
+import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { User, translateRole } from '../../models/user.model';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 import { AppState } from '../../store';
-import { User } from '../../models/user.model';
 import * as AuthSelectors from '../../store/selectors/auth.selectors';
 
 @Component({
@@ -18,8 +19,12 @@ import * as AuthSelectors from '../../store/selectors/auth.selectors';
 })
 export class ProfileComponent {
   user$: Observable<User | null>;
+  translateRole = translateRole;
 
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    private errorHandler: ErrorHandlerService
+  ) {
     this.user$ = this.store.select(AuthSelectors.selectUser);
   }
 

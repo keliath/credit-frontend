@@ -1,0 +1,100 @@
+<div class="credit-requests-list-container">
+  <div class="header">
+    <h2>Credit Requests</h2>
+    <mat-form-field>
+      <mat-label>Filter by Status</mat-label>
+      <mat-select [formControl]="statusFilter">
+        <mat-option [value]="CreditRequestStatus.PENDING">Pending</mat-option>
+        <mat-option [value]="CreditRequestStatus.APPROVED">Approved</mat-option>
+        <mat-option [value]="CreditRequestStatus.REJECTED">Rejected</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="loading$ | async" class="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="error$ | async as error" class="error-message">
+    {{ error }}
+  </div>
+
+  <table
+    mat-table
+    [dataSource]="(creditRequests$ | async) || []"
+    matSort
+    matSortActive="createdAt"
+    matSortDirection="desc"
+    class="requests-table"
+  >
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="username">
+      <th mat-header-cell *matHeaderCellDef>Username</th>
+      <td mat-cell *matCellDef="let element">{{ element.username }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef>Amount</th>
+      <td mat-cell *matCellDef="let element">
+        {{ formatCurrency(element.amount) }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="purpose">
+      <th mat-header-cell *matHeaderCellDef>Purpose</th>
+      <td mat-cell *matCellDef="let element">{{ element.purpose }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef>Status</th>
+      <td mat-cell *matCellDef="let element">
+        <span class="status-badge" [ngClass]="element.status.toLowerCase()">
+          {{ element.status }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef>Created At</th>
+      <td mat-cell *matCellDef="let element">
+        {{ formatDate(element.createdAt) }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let element">
+        <a
+          mat-icon-button
+          color="primary"
+          [routerLink]="['/credit-requests', element.id]"
+        >
+          <mat-icon>visibility</mat-icon>
+        </a>
+        <ng-container *ngIf="element.status === CreditRequestStatus.PENDING">
+          <button
+            mat-icon-button
+            color="accent"
+            (click)="updateStatus(element.id, CreditRequestStatus.APPROVED)"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="updateStatus(element.id, CreditRequestStatus.REJECTED)"
+          >
+            <mat-icon>close</mat-icon>
+          </button>
+        </ng-container>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

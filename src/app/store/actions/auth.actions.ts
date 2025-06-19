@@ -47,7 +47,7 @@ export const whoami = createAction('[Auth] Whoami');
 
 export const whoamiSuccess = createAction(
   '[Auth] Whoami Success',
-  props<{ user: User }>()
+  props<{ user: User; token: string }>()
 );
 
 export const whoamiFailure = createAction(

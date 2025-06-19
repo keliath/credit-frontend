@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Observable, map, take } from 'rxjs';
+import { Observable, combineLatest, of } from 'rxjs';
+import { filter, map, switchMap, take } from 'rxjs/operators';
 import { AppState } from '../store';
 import * as AuthActions from '../store/actions/auth.actions';
 import * as AuthSelectors from '../store/selectors/auth.selectors';
@@ -13,23 +14,28 @@ export class AuthGuard implements CanActivate {
   constructor(private store: Store<AppState>, private router: Router) {}
 
   canActivate(): Observable<boolean | UrlTree> {
-    return this.store.select(AuthSelectors.selectUser).pipe(
+    return combineLatest([
+      this.store.select(AuthSelectors.selectUser),
+      this.store.select((state) => state.auth.loading),
+    ]).pipe(
       take(1),
-      map((user) => {
-        // If we have a user, allow access
-        if (user) {
-          return true;
-        }
-
-        // Check for token
+      switchMap(([user, loading]) => {
         const token = localStorage.getItem('token');
-        if (!token) {
-          return this.router.createUrlTree(['/login']);
+        if (user) {
+          return of(true);
         }
-
-        // If we have a token but no user, dispatch whoami
+        if (!token) {
+          return of(this.router.createUrlTree(['/login']));
+        }
+        if (loading) {
+          return of(false);
+        }
         this.store.dispatch(AuthActions.whoami());
-        return true;
+        return this.store.select(AuthSelectors.selectUser).pipe(
+          filter((u) => !!u),
+          take(1),
+          map(() => true)
+        );
       })
     );
   }
