@@ -20,12 +20,12 @@ export const selectIsAuthenticated = createSelector(
 
 export const selectIsAnalyst = createSelector(
   selectUser,
-  (user) => user?.role === 'Analyst'
+  (user) => user?.role?.toLowerCase() === 'analyst'
 );
 
 export const selectIsApplicant = createSelector(
   selectUser,
-  (user) => user?.role === 'User'
+  (user) => user?.role?.toLowerCase() === 'user'
 );
 
 export const selectAuthLoading = createSelector(

@@ -74,12 +74,23 @@ import { StatusChangeDialogComponent } from '../status-change-dialog/status-chan
                 <mat-option value="REJECTED">Rechazado</mat-option>
               </mat-select>
             </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="accent"
+              (click)="exportToExcel()"
+              class="export-btn"
+            >
+              <mat-icon>table_chart</mat-icon>
+              Exportar Excel
+            </button>
           </div>
         </mat-card-header>
 
         <mat-card-content>
           <div *ngIf="loading$ | async" class="loading">
-            <mat-spinner></mat-spinner>
+            <mat-spinner diameter="40" color="primary"></mat-spinner>
+            <p class="loading-text">Cargando solicitudes...</p>
           </div>
 
           <table
@@ -237,8 +248,11 @@ import { StatusChangeDialogComponent } from '../status-change-dialog/status-chan
       }
       .loading {
         display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 40px;
+        gap: 16px;
       }
       .spacer {
         flex: 1 1 auto;
@@ -247,6 +261,16 @@ import { StatusChangeDialogComponent } from '../status-change-dialog/status-chan
         display: flex;
         gap: 16px;
         align-items: center;
+      }
+      .export-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .export-btn mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
       }
       mat-card-header {
         margin-bottom: 20px;
@@ -264,6 +288,11 @@ import { StatusChangeDialogComponent } from '../status-change-dialog/status-chan
       .mat-mdc-chip.mat-error {
         background-color: #e53935 !important;
         color: white !important;
+      }
+      .loading-text {
+        color: #666;
+        font-size: 14px;
+        margin: 0;
       }
     `,
   ],
@@ -419,34 +448,84 @@ export class CreditRequestsListComponent implements OnInit {
   }
 
   exportToPdf(): void {
-    const filter: CreditRequestFilter = {};
+    const body: any = {};
     if (this.statusFilter.value) {
-      filter.status = this.statusFilter.value;
+      body.status = this.statusFilter.value;
     }
 
-    this.creditRequestService.exportToPdf(filter).subscribe((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'solicitudes-credito.pdf';
-      link.click();
-      window.URL.revokeObjectURL(url);
-    });
+    this.creditRequestService.exportToPdf(body).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const timestamp = new Date().toISOString().split('T')[0];
+        const statusFilter = this.statusFilter.value
+          ? `-${this.statusFilter.value.toLowerCase()}`
+          : '';
+        link.download = `solicitudes-credito${statusFilter}-${timestamp}.pdf`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+
+        this.snackBar.open(
+          'Exportación a PDF completada exitosamente',
+          'Cerrar',
+          {
+            duration: 3000,
+            panelClass: 'success-snackbar',
+          }
+        );
+      },
+      (error) => {
+        this.snackBar.open(
+          `Error al exportar: ${error.message || 'Error desconocido'}`,
+          'Cerrar',
+          {
+            duration: 5000,
+            panelClass: 'error-snackbar',
+          }
+        );
+      }
+    );
   }
 
   exportToExcel(): void {
-    const filter: CreditRequestFilter = {};
+    const body: any = {};
     if (this.statusFilter.value) {
-      filter.status = this.statusFilter.value;
+      body.status = this.statusFilter.value;
     }
 
-    this.creditRequestService.exportToExcel(filter).subscribe((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'solicitudes-credito.xlsx';
-      link.click();
-      window.URL.revokeObjectURL(url);
-    });
+    this.creditRequestService.exportToExcel(body).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        const timestamp = new Date().toISOString().split('T')[0];
+        const statusFilter = this.statusFilter.value
+          ? `-${this.statusFilter.value.toLowerCase()}`
+          : '';
+        link.download = `solicitudes-credito${statusFilter}-${timestamp}.xlsx`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+
+        this.snackBar.open(
+          'Exportación a Excel completada exitosamente',
+          'Cerrar',
+          {
+            duration: 3000,
+            panelClass: 'success-snackbar',
+          }
+        );
+      },
+      (error) => {
+        this.snackBar.open(
+          `Error al exportar: ${error.message || 'Error desconocido'}`,
+          'Cerrar',
+          {
+            duration: 5000,
+            panelClass: 'error-snackbar',
+          }
+        );
+      }
+    );
   }
 }

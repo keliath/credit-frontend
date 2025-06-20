@@ -48,7 +48,7 @@ import * as AuthSelectors from '../../store/selectors/auth.selectors';
               <mat-card class="action-card" routerLink="/profile">
                 <mat-icon>person</mat-icon>
                 <h3>Mi Perfil</h3>
-                <p>Ver y editar mi información personal</p>
+                <p>Ver mi información personal</p>
               </mat-card>
             </div>
           </div>

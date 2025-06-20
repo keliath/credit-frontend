@@ -50,7 +50,8 @@ import * as CreditRequestSelectors from '../../store/selectors/credit-request.se
 
         <mat-card-content>
           <div *ngIf="loading$ | async" class="loading">
-            <mat-spinner></mat-spinner>
+            <mat-spinner diameter="40" color="primary"></mat-spinner>
+            <p class="loading-text">Cargando mis solicitudes...</p>
           </div>
 
           <table
@@ -139,8 +140,11 @@ import * as CreditRequestSelectors from '../../store/selectors/credit-request.se
       }
       .loading {
         display: flex;
+        flex-direction: column;
+        align-items: center;
         justify-content: center;
-        padding: 20px;
+        padding: 40px;
+        gap: 16px;
       }
       .spacer {
         flex: 1 1 auto;
@@ -158,6 +162,11 @@ import * as CreditRequestSelectors from '../../store/selectors/credit-request.se
       .mat-mdc-chip.mat-error {
         background-color: #e53935 !important;
         color: white !important;
+      }
+      .loading-text {
+        color: #666;
+        font-size: 14px;
+        margin: 0;
       }
     `,
   ],

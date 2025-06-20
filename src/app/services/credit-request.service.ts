@@ -65,26 +65,22 @@ export class CreditRequestService {
     return monthlyIncome >= 1500 ? 'Aprobado' : 'Rechazado';
   }
 
-  // Simulated export
+  // Export methods
   exportToPdf(filter?: CreditRequestFilter): Observable<Blob> {
-    return new Observable((observer) => {
-      setTimeout(() => {
-        const blob = new Blob(['PDF content'], { type: 'application/pdf' });
-        observer.next(blob);
-        observer.complete();
-      }, 1000);
+    const body: any = {
+      status: filter?.status || undefined,
+    };
+    return this.http.post(`${this.apiUrl}/export`, body, {
+      responseType: 'blob',
     });
   }
 
   exportToExcel(filter?: CreditRequestFilter): Observable<Blob> {
-    return new Observable((observer) => {
-      setTimeout(() => {
-        const blob = new Blob(['Excel content'], {
-          type: 'application/vnd.ms-excel',
-        });
-        observer.next(blob);
-        observer.complete();
-      }, 1000);
+    const body: any = {
+      status: filter?.status || undefined,
+    };
+    return this.http.post(`${this.apiUrl}/export`, body, {
+      responseType: 'blob',
     });
   }
 }
