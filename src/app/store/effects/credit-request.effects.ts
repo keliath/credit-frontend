@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import { CreditRequestListResponse } from '../../models/credit-request.model';
 import { CreditRequestService } from '../../services/credit-request.service';
 import * as CreditRequestActions from '../actions/credit-request.actions';
@@ -20,7 +21,8 @@ export class CreditRequestEffects {
   constructor(
     private actions$: Actions,
     private creditRequestService: CreditRequestService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {
     this.loadCreditRequests$ = createEffect(() =>
       this.actions$.pipe(
@@ -154,31 +156,50 @@ export class CreditRequestEffects {
       )
     );
 
-    this.exportCreditRequests$ = createEffect(
-      () =>
-        this.actions$.pipe(
-          ofType(CreditRequestActions.exportCreditRequests),
-          mergeMap(({ format, status }) =>
-            (format === 'pdf'
-              ? this.creditRequestService.exportToPdf({ status })
-              : this.creditRequestService.exportToExcel({ status })
-            ).pipe(
-              map((blob) => {
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `credit-requests.${format}`;
-                link.click();
-                window.URL.revokeObjectURL(url);
-                return CreditRequestActions.exportCreditRequestsSuccess();
-              }),
-              catchError((error) =>
-                of(CreditRequestActions.exportCreditRequestsFailure({ error }))
-              )
-            )
+    this.exportCreditRequests$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(CreditRequestActions.exportCreditRequests),
+        mergeMap(({ format, status }) =>
+          (format === 'pdf'
+            ? this.creditRequestService.exportToPdf({ status })
+            : this.creditRequestService.exportToExcel({ status })
+          ).pipe(
+            tap((blob) => {
+              const url = window.URL.createObjectURL(blob);
+              const link = document.createElement('a');
+              link.href = url;
+              const timestamp = new Date().toISOString().split('T')[0];
+              const statusFilter = status ? `-${status.toLowerCase()}` : '';
+              link.download = `credit-requests${statusFilter}-${timestamp}.${format}`;
+              link.click();
+              window.URL.revokeObjectURL(url);
+
+              this.snackBar.open(
+                `Export to ${format.toUpperCase()} completed successfully!`,
+                'Close',
+                {
+                  duration: 3000,
+                  panelClass: 'success-snackbar',
+                }
+              );
+            }),
+            map(() => CreditRequestActions.exportCreditRequestsSuccess()),
+            catchError((error) => {
+              this.snackBar.open(
+                `Export failed: ${error.message || 'Unknown error'}`,
+                'Close',
+                {
+                  duration: 5000,
+                  panelClass: 'error-snackbar',
+                }
+              );
+              return of(
+                CreditRequestActions.exportCreditRequestsFailure({ error })
+              );
+            })
           )
-        ),
-      { dispatch: false }
+        )
+      )
     );
   }
 }
