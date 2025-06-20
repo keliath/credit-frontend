@@ -46,6 +46,27 @@ Aplicación web desarrollada en Angular 19 para la gestión de solicitudes de cr
 
    La app estará disponible en `http://localhost:4200`
 
+## Puesta en Marcha con Docker
+
+#### Requisitos Previos
+
+- Docker engine o desktop
+- Make (Opcional), en linux y mac debería venir por defecto en windows: con el manejador de paquetes chocolatey `choco install make`.
+
+  1.1. **Ejecutar la aplicación con Makefile**
+
+```bash
+make dev
+```
+
+1.2 **Ejecutar la aplicación sin Makefile**
+
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.override.yml
+```
+
+La app estará disponible en `http://localhost:4200`
+
 ## Estructura del Proyecto
 
 ```
